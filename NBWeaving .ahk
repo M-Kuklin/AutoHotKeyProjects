@@ -1,4 +1,4 @@
-﻿Ability1		:="1"
+Ability1		:="1"
 Ability2		:="2"
 Ability3		:="3"
 Ability4		:="4"
@@ -9,13 +9,13 @@ FlaskDurationInit[1] :=
 FlaskDurationInit[2] := 
 FlaskDurationInit[3] := 20000 
 FlaskDurationInit[4] := 
-FlaskDurationInit[5] := 
+FlaskDurationInit[5] :=
 FlaskDuration := []
 FlaskLastUsed := []
 UseFlasks := false
 HoldXButton := false
 LastXButton := 0
-
+Ultimatecooldown := 30000
 
 
 
@@ -26,7 +26,7 @@ LastXButton := 0
 Loop {
   if (UseFlasks) {
 
-    if ((A_TickCount - LastXButton) < 500) {
+    if ((A_TickCount - LastXButton) < 100) {
       Gosub, WhenReadySkillReady
     } else {
 
@@ -37,29 +37,46 @@ Loop {
   }
 }
 
-F2::
-  UseFlasks := not UseFlasks
-  if UseFlasks {
 
-    for i in FlaskDurationInit {
+FirstFunction:
+  UseFlasks := not UseFlasks
+  if UseFlasks 
+  {
+  ToolTip, UseFlasks On
+    for i in FlaskDurationInit 
+      {
       FlaskLastUsed[i] := 0
       FlaskDuration[i] := FlaskDurationInit[i]
+      }
+  } else 
+    {
+     ToolTip, UseFlasks Off
+     Reload
+     return
     }
-  } else {
-     ; ToolTip, UseFlasks Off
-  }
-  return
+
+  
+F2::
+Gosub,FirstFunction
+return
+
+
 
 ~XButton1::
 
   HoldXButton := true
-  LastXButton := A_TickCount
+  LastXButton := A_TickCount ; стартовый таймер
   return
 
 ~XButton1 up::
 
   HoldXButton := false
+  Gosub,FirstFunction
   return
+  
+
+
+
 
 
 ~1::
@@ -97,6 +114,7 @@ F2::
 
 
  ; вспомогательные функции лайт атак
+
 LightAttack:
   if GetKeyState("RButton", "P")=0
     {
@@ -114,35 +132,37 @@ return
 
 BuffUp:
   for flask, duration in FlaskDuration {
-    ; skip flasks with 0 duration and skip flasks that are still active
     if ((duration > 0) & (duration < A_TickCount - FlaskLastUsed[flask])) {
       If WeaponBarSwap = 
       {
           Sleep 1000
           Send %flask%
           FlaskLastUsed[flask] := A_TickCount
-          Random, VariableDelay, -99, 99
+          Random, VariableDelay, -50, 50
           FlaskDuration[flask] := FlaskDurationInit[flask] + VariableDelay ; randomize duration to simulate human
           sleep, %VariableDelay%        
       }
       else If WeaponBarSwap = 1 ; mainskillbar
       {
           Send, {SC29}
-          Sleep 1000
           WeaponBarSwap = 0
+          ToolTip, WeaponBarSwap = 0
+          Sleep 1000
           Send %flask%
           FlaskLastUsed[flask] := A_TickCount
-          Random, VariableDelay, -99, 99
+          Random, VariableDelay, -50, 50
           FlaskDuration[flask] := FlaskDurationInit[flask] + VariableDelay ; randomize duration to simulate human
           sleep, %VariableDelay%
           Send, {SC29}
+          WeaponBarSwap = 1
+          ToolTip, WeaponBarSwap = 1
       }
-      else if WeaponBarSwap = 0
+      else if WeaponBarSwap = 0 ; backskillbar
       {
           Sleep 1000
           Send %flask%
           FlaskLastUsed[flask] := A_TickCount
-          Random, VariableDelay, -99, 99
+          Random, VariableDelay, -50, 50
           FlaskDuration[flask] := FlaskDurationInit[flask] + VariableDelay ; randomize duration to simulate human
           sleep, %VariableDelay%    
       }
@@ -153,8 +173,7 @@ BuffUp:
  ; ротация как вспомагательная функция
 
 Weawing:
- ;                               first part
-
+ ;                           first part
 try
   {
   Gosub, BuffUp	
@@ -181,7 +200,8 @@ try
   Gosub, BuffUp	
   }
 Send, {SC29}
-WeaponBarSwap = 1
+WeaponBarSwap = 1 ; main skill bar
+ToolTip, WeaponBarSwap = 1
  ;                            second part
 Sleep 1000
 Gosub, LightAttack
@@ -233,7 +253,8 @@ try
   Gosub, BuffUp	
   }
 Send, {SC29}
-WeaponBarSwap = 0
+WeaponBarSwap = 0 ; backbar panel
+ToolTip, WeaponBarSwap = 0
  ;                              third part
 Sleep 1000
 Gosub, LightAttack
@@ -249,6 +270,7 @@ try
   {
   Gosub, BuffUp	
   }
+
 Sleep 1000
 Gosub, LightAttack
 Send %Ability5%
@@ -257,7 +279,8 @@ try
   Gosub, BuffUp	
   }
 Send, {SC29}
-WeaponBarSwap = 1
+WeaponBarSwap = 1 ; main skillbar
+ToolTip, WeaponBarSwap = 1
  ;                             fourth part
 Sleep 1000
 Gosub, LightAttack
@@ -310,12 +333,14 @@ try
   }
 Send, {SC29}
 WeaponBarSwap = 0
-return
+ToolTip, WeaponBarSwap = 0
 
 
 WhenReadySkillReady:
 Gosub, Weawing
-return
+
+
+
 
 
 

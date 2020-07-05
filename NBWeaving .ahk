@@ -1,9 +1,9 @@
-Ability1		:="1"
-Ability2		:="2"
-Ability3		:="3"
-Ability4		:="4"
-Ability5		:="5"
-Ability6		:="6"
+Ability1    :="1"
+Ability2    :="2"
+Ability3    :="3"
+Ability4    :="4"
+Ability5    :="5"
+Ability6    :="6"
 FlaskDurationInit := []
 FlaskDurationInit[1] := 
 FlaskDurationInit[2] := 
@@ -42,7 +42,7 @@ FirstFunction:
   UseFlasks := not UseFlasks
   if UseFlasks 
   {
-  ToolTip, UseFlasks On
+  ToolTip, UseFlasks On , 1490 , 30
     for i in FlaskDurationInit 
       {
       FlaskLastUsed[i] := 0
@@ -50,8 +50,8 @@ FirstFunction:
       }
   } else 
     {
-     ToolTip, UseFlasks Off
      Reload
+     ToolTip, UseFlasks Off
      return
     }
 
@@ -135,7 +135,8 @@ BuffUp:
     if ((duration > 0) & (duration < A_TickCount - FlaskLastUsed[flask])) {
       If WeaponBarSwap = 
       {
-          Sleep 1000
+          Sleep 900
+          Gosub, LightAttack
           Send %flask%
           FlaskLastUsed[flask] := A_TickCount
           Random, VariableDelay, -50, 50
@@ -146,8 +147,9 @@ BuffUp:
       {
           Send, {SC29}
           WeaponBarSwap = 0
-          ToolTip, WeaponBarSwap = 0
-          Sleep 1000
+          ToolTip, WeaponBarSwap = 0 , 1490 , 30
+          Sleep 900
+          Gosub, LightAttack
           Send %flask%
           FlaskLastUsed[flask] := A_TickCount
           Random, VariableDelay, -50, 50
@@ -155,11 +157,12 @@ BuffUp:
           sleep, %VariableDelay%
           Send, {SC29}
           WeaponBarSwap = 1
-          ToolTip, WeaponBarSwap = 1
+          ToolTip, WeaponBarSwap = 1 , 1490 , 30
       }
       else if WeaponBarSwap = 0 ; backskillbar
       {
-          Sleep 1000
+          Sleep 900
+          Gosub, LightAttack
           Send %flask%
           FlaskLastUsed[flask] := A_TickCount
           Random, VariableDelay, -50, 50
@@ -173,173 +176,171 @@ BuffUp:
  ; ротация как вспомагательная функция
 
 Weawing:
+
+ ; prebaff
+
+Gosub, LightAttack
+Send %Ability5%
+Send, {SC29}
+WeaponBarSwap = 0 ; backbar panel
+ToolTip, WeaponBarSwap = 0 , 1490 , 30
  ;                           first part
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
-Sleep 1000
-Gosub, LightAttack
-Send %Ability1%
-try
-  {
-  Gosub, BuffUp	
-  }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability2%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability4%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
+  }
+Sleep 850
+Gosub, LightAttack
+Send %Ability1%
+try
+  {
+  Gosub, BuffUp 
+  }
+Sleep 850
+Gosub, LightAttack
+Send %Ability5%
+try
+  {
+  Gosub, BuffUp 
   }
 Send, {SC29}
 WeaponBarSwap = 1 ; main skill bar
-ToolTip, WeaponBarSwap = 1
+ToolTip, WeaponBarSwap = 1 , 1490 , 30
  ;                            second part
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability5%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability4%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability3%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability3%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability3%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
 Sleep 1000
 Gosub, LightAttack
 Send %Ability5%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
-Send %Ability1%
-try
-  {
-  Gosub, BuffUp	
-  }
 Send, {SC29}
 WeaponBarSwap = 0 ; backbar panel
-ToolTip, WeaponBarSwap = 0
+ToolTip, WeaponBarSwap = 0 , 1490 , 30
  ;                              third part
-Sleep 1000
-Gosub, LightAttack
-Send %Ability1%
-try
-  {
-  Gosub, BuffUp	
-  }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability2%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
-
-Sleep 1000
-Gosub, LightAttack
-Send %Ability5%
-try
-  {
-  Gosub, BuffUp	
-  }
-Send, {SC29}
-WeaponBarSwap = 1 ; main skillbar
-ToolTip, WeaponBarSwap = 1
- ;                             fourth part
-Sleep 1000
-Gosub, LightAttack
-Send %Ability5%
-try
-  {
-  Gosub, BuffUp	
-  }
-Sleep 1000
-Gosub, LightAttack
-Send %Ability4%
-try
-  {
-  Gosub, BuffUp	
-  }
-Sleep 1000
-Gosub, LightAttack
-Send %Ability3%
-try
-  {
-  Gosub, BuffUp	
-  }
-Sleep 1000
-Gosub, LightAttack
-Send %Ability3%
-try
-  {
-  Gosub, BuffUp	
-  }
-Sleep 1000
-Gosub, LightAttack
-Send %Ability3%
-try
-  {
-  Gosub, BuffUp	
-  }
-Sleep 1000
-Gosub, LightAttack
-Send %Ability5%
-try
-  {
-  Gosub, BuffUp	
-  }
-Sleep 1000
+Sleep 850
 Gosub, LightAttack
 Send %Ability1%
 try
   {
-  Gosub, BuffUp	
+  Gosub, BuffUp 
   }
+Sleep 850
+Gosub, LightAttack
+Send %Ability5%
+try
+  {
+  Gosub, BuffUp 
+  }
+Send %Ability4%
 Send, {SC29}
-WeaponBarSwap = 0
-ToolTip, WeaponBarSwap = 0
-
+WeaponBarSwap = 1 ; main skillbar
+ToolTip, WeaponBarSwap = 1 , 1490 , 30
+ ;                             fourth part
+Sleep 850
+Gosub, LightAttack
+Send %Ability5%
+try
+  {
+  Gosub, BuffUp 
+  }
+Sleep 850
+Gosub, LightAttack
+Send %Ability4%
+try
+  {
+  Gosub, BuffUp 
+  }
+Sleep 850
+Gosub, LightAttack
+Send %Ability3%
+try
+  {
+  Gosub, BuffUp 
+  }
+Sleep 850
+Gosub, LightAttack
+Send %Ability3%
+try
+  {
+  Gosub, BuffUp 
+  }
+Sleep 850
+Gosub, LightAttack
+Send %Ability3%
+try
+  {
+  Gosub, BuffUp 
+  }
+Sleep 1000
+Gosub, LightAttack
+Send %Ability5%
+try
+  {
+  Gosub, BuffUp 
+  }
+Sleep 850
 
 WhenReadySkillReady:
 Gosub, Weawing
-
-
 
 
 
